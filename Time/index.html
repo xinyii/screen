@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Time</title>
+    <link href="css/flipclock.css" rel="stylesheet">
+    <style type="text/css">
+    html,
+    body {
+        height: 100%;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        background-color: black;
+    }
+    
+    body {
+        position: relative;
+    }
+    
+    .your-clock {
+        position: absolute;
+        margin: 0;
+        width: auto;
+        right: 100px;
+        bottom: 100px;
+    }
+    
+    .screen {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 99999;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="your-clock"></div>
+    <div class="screen"></div>
+    <script src="http://cdn.bootcss.com/jquery/1.7.2/jquery.min.js"></script>
+    <script src="js/flipclock.min.js"></script>
+    <script type="text/javascript">
+	    var isFullScreen = false;
+	    //进入全屏
+	    function requestFullScreen() {
+	    	$(".screen").css("cursor", "url(img/cursor.png), auto");
+	        var de = document.documentElement;
+	        if (de.requestFullscreen) {
+	            de.requestFullscreen();
+	        } else if (de.mozRequestFullScreen) {
+	            de.mozRequestFullScreen();
+	        } else if (de.webkitRequestFullScreen) {
+	            de.webkitRequestFullScreen();
+	        }
+	    }
+	    //退出全屏
+	    function exitFullscreen() {
+	    	$(".screen").css("cursor", "inherit");
+	        var de = document;
+	        if (de.exitFullscreen) {
+	            de.exitFullscreen();
+	        } else if (de.mozCancelFullScreen) {
+	            de.mozCancelFullScreen();
+	        } else if (de.webkitCancelFullScreen) {
+	            de.webkitCancelFullScreen();
+	        }
+	    }
+	    
+	    var isFullScreen = false;
+	    function fullscreen() {
+	    	if (isFullScreen) {
+	    		exitFullscreen();
+	    		isFullScreen = false;
+	    	} else {
+	    		requestFullScreen();
+	    		isFullScreen = true;
+	    	}
+	    }
+	    
+	    function getNowSecond() {
+	        var date = new Date();
+	        var second = 0;
+	        second += date.getHours() * 3600;
+	        second += date.getMinutes() * 60;
+	        second += date.getSeconds();
+	        return second;
+	    };
+
+	    $(function() {
+	    	var clock = new FlipClock($('.your-clock'), getNowSecond(), {});
+		    $(".screen").click(fullscreen);
+		    $(document).bind("contextmenu",function(e){   
+		          return false;   
+		    });
+		    $(document).keyup(function(e) {
+		    	if (e.keyCode == 32) {
+		    		fullscreen();
+		    	}
+		    });
+	    })
+	    
+    </script>
+</body>
+
+</html>
